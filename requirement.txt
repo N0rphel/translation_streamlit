@@ -2,3 +2,7 @@ streamlit
 torch
 transformers
 tokenizers
+PyPDF2
+python-docx
+
+
