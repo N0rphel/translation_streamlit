@@ -4,5 +4,7 @@ transformers
 tokenizers
 PyPDF2
 python-docx
+docx
+sentencepiece
 
 

@@ -12,11 +12,6 @@ from io import BytesIO
 
 MODELS_DIR = "./models" 
 
-# Language mapping
-LANGUAGE_MAPPING = {
-    "dzo": "dzo_Tibt",
-    "eng": "eng_Latn"
-}
 
 def process_txt(text):
     # Split by one or more newlines (with optional whitespace) to capture paragraphs
@@ -46,12 +41,10 @@ def list_models():
     return []
 
 @st.cache_resource
-def load_model(path, tgt_lang, src_lang):
-    st.write(path, tgt_lang, src_lang)
-    tokenizer = AutoTokenizer.from_pretrained(path)
+def load_model(path):
+    st.write(path)
+    tokenizer = AutoTokenizer.from_pretrained(path,)
     model = AutoModelForSeq2SeqLM.from_pretrained(path)
-    tokenizer.src_lang = src_lang
-    tokenizer.tgt_lang = tgt_lang
     return model, tokenizer
 
 def translate(text, model, tokenizer):
@@ -68,16 +61,12 @@ with st.expander("Load Model:"):
     models = list_models()
     if models:
         selected_model = st.selectbox("Available Models:", models)
-        model_path = os.path.join(MODELS_DIR, selected_model)
+        model_path = os.path.join(MODELS_DIR, selected_model).replace("\\", "/")
         st.write(f"**Selected Model:** {selected_model}")
-
-        # Optional columns for language display
-        col1, col2 = st.columns(2)
-        tgt_lang = LANGUAGE_MAPPING['dzo']
-        src_lang = LANGUAGE_MAPPING['eng']
+        st.write(f"**Model Path:** {model_path}")
 
         if st.button("Load Model"):
-            model, tokenizer = load_model(model_path, tgt_lang, src_lang)
+            model, tokenizer = load_model(model_path)
             st.session_state["model"] = model
             st.session_state["tokenizer"] = tokenizer
             st.success(f"✅ Model '{selected_model}' loaded successfully!")
